@@ -1,0 +1,41 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model kc {
+  id     Int     @id @default(autoincrement())
+  kcid   String? @db.NVarChar(255)
+  name   String? @db.NVarChar(255)
+  credit Float?
+}
+
+model xsxx {
+  id      Int     @id @default(autoincrement())
+  name    String? @db.NVarChar(255)
+  gender  String? @db.NVarChar(255)
+  class   Int?    @db.SmallInt
+  age     Int?    @db.SmallInt
+  snumber String? @db.NVarChar(255)
+}
+
+model xxxx {
+  id      Int     @id @default(autoincrement())
+  kcid    String? @db.NVarChar(255)
+  grade   Int?    @db.SmallInt
+  snumber String? @db.NVarChar(255)
+}
+
+view cjpm {
+  id      Int     @id
+  snumber String? @db.NVarChar(255)
+  name    String? @db.NVarChar(255)
+  class   Int?    @db.SmallInt
+  grade   Int?
+  rank    Int?
+}
