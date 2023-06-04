@@ -7,16 +7,35 @@ import { UpdateStudentDto } from './dto/update-student.dto';
 export class StudentService {
     constructor(private readonly prisma: PrismaService) { }
 
-    async createStudent(createStudentDto: CreateStudentDto) {
-        const student = await this.prisma.xsxx.create({
-            data: createStudentDto
+    async findOne(snumber: string) {
+        const student = await this.prisma.xsxx.findFirst({
+            where: { snumber }
         })
+        if (!student) throw Error('该学生不存在')
+        return student
+    }
+
+    async listStudent() {
+        const students = await this.prisma.xsxx.findMany();
         return {
-            items: student
+            items: students
         }
     }
 
+    async createStudent(createStudentDto: CreateStudentDto) {
+        if (await this.prisma.xsxx.findFirst({where: {snumber: createStudentDto.snumber}})) {
+            throw Error('创建失败: 用户已存在')
+        }
+        const student = await this.prisma.xsxx.create({
+            data: createStudentDto
+        })
+        return student
+    }
+
     async updateStudent(updateStudentDto: UpdateStudentDto) {
+        if (!await this.prisma.xsxx.findFirst({where: {snumber: updateStudentDto.snumber}})) {
+            throw Error('更新失败: 用户不存在')
+        }
         const student = await this.prisma.xsxx.updateMany({
             where: {
                 snumber: updateStudentDto.snumber
@@ -33,7 +52,7 @@ export class StudentService {
             where: { snumber }
         })
         return {
-            items: student
+            status: student.count == 1 ? '删除成功': '删除失败'
         }
     }
 }

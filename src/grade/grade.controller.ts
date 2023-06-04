@@ -12,6 +12,11 @@ export class GradeController {
         return this.gradeService.rank()
     }
 
+    @Get('list')
+    listGrade() {
+        return this.gradeService.listGrades()
+    }
+
     @Post('create')
     createGrade(@Body() createGradeDto: CreateGradeDto) {
         return this.gradeService.createGrade(createGradeDto)
